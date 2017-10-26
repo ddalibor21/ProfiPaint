@@ -9,7 +9,9 @@ public interface DrawFace {
 	List<Geometric> getGeometrics();
 	List<Geometric> getSelection();
 	void addGeometric(GeoType type);
-	
-	
-	
+
+	void setOnSelect(OnGeometricSelect onSelect);
+	void repaint();
+	Geometric getSelected();	
+
 }

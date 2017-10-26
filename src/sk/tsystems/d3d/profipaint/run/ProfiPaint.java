@@ -1,6 +1,7 @@
 package sk.tsystems.d3d.profipaint.run;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -17,18 +18,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import sk.tsystems.d3d.profipaint.editor.PaintPanel;
 import sk.tsystems.d3d.profipaint.editor.core.DrawFace;
 import sk.tsystems.d3d.profipaint.editor.core.DrawPanel;
+import sk.tsystems.d3d.profipaint.editor.core.OnGeometricSelect;
 import sk.tsystems.d3d.profipaint.editor.menu.MenuClick;
 import sk.tsystems.d3d.profipaint.editor.menu.MenuItem;
 import sk.tsystems.d3d.profipaint.editor.menu.PaintMenu;
 import sk.tsystems.d3d.profipaint.filesupport.Vector2File;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
+import sk.tsystems.d3d.profipaint.geometric.Geometric;
 import sk.tsystems.d3d.profipaint.geometric.GeometricCointainer;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
 
-public class ProfiPaint extends JFrame implements MenuClick {
+public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private static final long serialVersionUID = 6639228443591986333L;
 
 	private DrawFace df;
@@ -97,6 +99,8 @@ public class ProfiPaint extends JFrame implements MenuClick {
 		DrawPanel drp = new DrawPanel(8000, 4500);
 		paintPanel.add(drp, BorderLayout.CENTER);
 		df = drp;
+		df.setOnSelect(this);
+		
 		// paintPanel.add(sc, BorderLayout.CENTER);
 		comboBox.addItemListener(new ItemListener() {
 
@@ -152,8 +156,16 @@ public class ProfiPaint extends JFrame implements MenuClick {
 			GeometricCointainer con = Vector2File.loadFile(file.getAbsolutePath());
 			df.getGeometrics().clear();
 			df.getGeometrics().addAll(con.getListoFGeometrics());
+			df.repaint();
 		}
 
+	}
+
+	@Override
+	public void onGeometricSelect(Geometric selected) {
+		if(selected!=null) {
+			selected.setFill(Color.RED);
+		}
 	}
 
 }
