@@ -23,6 +23,10 @@ import sk.tsystems.d3d.profipaint.editor.menu.PaintMenu;
 import sk.tsystems.d3d.profipaint.filesupport.Vector2File;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
 import sk.tsystems.d3d.profipaint.geometric.GeometricCointainer;
+import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class ProfiPaint extends JFrame implements MenuClick {
 	private static final long serialVersionUID = 6639228443591986333L;
@@ -47,10 +51,19 @@ public class ProfiPaint extends JFrame implements MenuClick {
 		JToolBar toolBar = new JToolBar();
 		paintPanel.add(toolBar, BorderLayout.NORTH);
 
-		JButton btnSelect = new JButton("Select");
+		JButton btnSelect = new JButton();
+		btnSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnSelect.setIcon(new ImageIcon(ProfiPaint.class.getResource("/Icons/SelectIcon.png")));
 		toolBar.add(btnSelect);
 
 		JButton btnRotateRight = new JButton("Rotate right");
+		btnRotateRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		toolBar.add(btnRotateRight);
 
 		JButton btnRotateLeft = new JButton("Rotate left");
