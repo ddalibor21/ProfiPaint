@@ -10,9 +10,7 @@ import sk.tsystems.d3d.profipaint.geometric.GeometricCointainer;
 
 public class Vector2File {
 
-	private static final String path = "C:\\Users\\student\\eclipse-workspace\\save.ser\\";
-
-	public void saveFile(GeometricCointainer geoCon) {
+	public static void saveFile(GeometricCointainer geoCon,String path) {
 
 		try {
 			FileOutputStream fileOut = new FileOutputStream(path);
@@ -27,7 +25,7 @@ public class Vector2File {
 
 	}
 
-	public GeometricCointainer loadFile() throws MyException {
+	public static GeometricCointainer loadFile(String path) throws MyException {
 		GeometricCointainer geoCon = null;
 
 		try {

@@ -1,31 +1,40 @@
 package sk.tsystems.d3d.profipaint.run;
 
-import javax.swing.JFrame;
 import java.awt.BorderLayout;
-import java.awt.ScrollPane;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 
-import sk.tsystems.d3d.profipaint.editor.PaintMenu;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JToolBar;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import sk.tsystems.d3d.profipaint.editor.PaintPanel;
 import sk.tsystems.d3d.profipaint.editor.core.DrawFace;
 import sk.tsystems.d3d.profipaint.editor.core.DrawPanel;
+import sk.tsystems.d3d.profipaint.editor.menu.MenuClick;
+import sk.tsystems.d3d.profipaint.editor.menu.MenuItem;
+import sk.tsystems.d3d.profipaint.editor.menu.PaintMenu;
+import sk.tsystems.d3d.profipaint.filesupport.Vector2File;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
+import sk.tsystems.d3d.profipaint.geometric.GeometricCointainer;
 
-import javax.swing.JToolBar;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.DefaultComboBoxModel;
-
-public class ProfiPaint extends JFrame {
+public class ProfiPaint extends JFrame implements MenuClick {
 	private static final long serialVersionUID = 6639228443591986333L;
+
+	private DrawFace df;
 
 	public ProfiPaint() {
 		super("Profi Paint");
 
-		setJMenuBar(new PaintMenu());
+		PaintMenu pm = new PaintMenu();
+		setJMenuBar(pm);
+		pm.setOnMenuClick(this);
 
 		PaintPanel paintPanel = new PaintPanel();
 		setContentPane(paintPanel);
@@ -74,6 +83,7 @@ public class ProfiPaint extends JFrame {
 		// sc.add(new DrawPanel(8000, 4500), BorderLayout.CENTER);
 		DrawPanel drp = new DrawPanel(8000, 4500);
 		paintPanel.add(drp, BorderLayout.CENTER);
+		df = drp;
 		// paintPanel.add(sc, BorderLayout.CENTER);
 		comboBox.addItemListener(new ItemListener() {
 
@@ -94,6 +104,43 @@ public class ProfiPaint extends JFrame {
 				new ProfiPaint().setVisible(true);
 			}
 		});
+	}
+
+	@Override
+	public void menuClick(MenuItem clicked) {
+		switch (clicked) {
+		case EXIT:
+			break;
+		case OPEN:
+		case SAVE:
+			saveOpen(clicked);
+			break;
+
+		default:
+			throw new RuntimeException("Unimplemnted menu click " + clicked);
+		}
+	}
+
+	private void saveOpen(MenuItem i) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.ser", "ser"));
+
+		File file;
+
+		if (MenuItem.SAVE.equals(i) && fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+			GeometricCointainer geoCon = new GeometricCointainer(200, 200, df.getGeometrics());
+			Vector2File.saveFile(geoCon, file.getAbsolutePath());
+		}
+
+		if (MenuItem.OPEN.equals(i) && fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+
+			GeometricCointainer con = Vector2File.loadFile(file.getAbsolutePath());
+			df.getGeometrics().clear();
+			df.getGeometrics().addAll(con.getListoFGeometrics());
+		}
+
 	}
 
 }
