@@ -2,7 +2,11 @@ package sk.tsystems.d3d.profipaint.geometric;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D.Double;
 import java.io.Serializable;
 
@@ -20,12 +24,31 @@ public class Geometric implements Serializable {
 	private String text;
 	private Font font;
 
+	private transient Shape shape;
+	
 	public Geometric(GeoType type, Double position) {
 		super();
 		this.type = type;
 		this.position = position;
 		this.width = 50;
 		this.height = 50;
+		switch(this.type) {
+	    	case OVAL:
+	  	    	shape = new Ellipse2D.Double(this.getPosition().getX(), this.getPosition().getY(),this.getWidth(), this.getHeight());
+	  		    break;
+		    case RECTANGLE:
+		  		shape =new Rectangle2D.Double(this.getPosition().getX(), this.getPosition().getY(),this.getWidth(), this.getHeight());
+		  		break;
+		  	case LINE:
+		  		shape =new Line2D.Double(this.getPosition().getX(), this.getPosition().getY(),this.getPosition().getX()+this.getWidth(),this.getPosition().getY()+ this.getHeight());
+		  		break;
+		  	case TEXT:
+		  		shape = null;
+		  		break;
+		  	default:
+		  		shape = null;
+		  		break;	
+		}
 	}
 
 	public GeoType getType() {
@@ -106,6 +129,10 @@ public class Geometric implements Serializable {
 
 	public void setTextColor(Color textColor) {
 		this.textColor = textColor;
+	}
+
+	public Shape getShape() {
+		return shape;
 	}
 
 }
