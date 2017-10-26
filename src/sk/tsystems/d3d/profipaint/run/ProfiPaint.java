@@ -5,8 +5,21 @@ import javax.swing.JFrame;
 public class ProfiPaint extends JFrame {
 	private static final long serialVersionUID = 6639228443591986333L;
 
+	public ProfiPaint() {
+		super("Profi Paint");
+
+		setSize(900, 600);
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	}
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new ProfiPaint().setVisible(true);
+			}
+		});
 	}
 
 }
