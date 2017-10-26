@@ -1,6 +1,7 @@
 package sk.tsystems.d3d.profipaint.geometric;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.Serializable;
@@ -14,8 +15,10 @@ public class Geometric implements Serializable {
 	private double height;
 	private Color fill;
 	private Color border;
+	private Color textColor;
 	private double borderSize;
 	private String text;
+	private Font font;
 
 	public Geometric(GeoType type, Double position) {
 		super();
@@ -87,6 +90,22 @@ public class Geometric implements Serializable {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public Font getFont() {
+		return font;
+	}
+
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
+	public Color getTextColor() {
+		return textColor;
+	}
+
+	public void setTextColor(Color textColor) {
+		this.textColor = textColor;
 	}
 
 }
