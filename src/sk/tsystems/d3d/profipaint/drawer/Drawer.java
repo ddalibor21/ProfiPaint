@@ -29,7 +29,7 @@ public class Drawer {
 		  			g.setColor(geo.getFill());
 		  		else	
 		  		    g.setColor(Color.WHITE);	
-		  	    g.fill(new Rectangle2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight()));
+		  	    g.fill(geo.getShape());
 		  		
 		  		if(geo.getBorder()!=null) 
 		  			g.setColor(geo.getBorder());
@@ -38,7 +38,7 @@ public class Drawer {
 		  	    oldStroke = g.getStroke();
 		  		if(geo.getBorderSize()>0)
 		  			g.setStroke((Stroke) new BasicStroke((int)geo.getBorderSize()));
-		  	    g.draw(new Rectangle2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight()));
+		  	    g.draw(geo.getShape());
 		  	    g.setStroke(oldStroke);
 		  		break;
 		  	case OVAL:
@@ -46,7 +46,7 @@ public class Drawer {
 		  			g.setColor(geo.getFill());
 		  		else	
 		  		    g.setColor(Color.WHITE);	
-		  	    g.fill(new Ellipse2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight()));
+		  	    g.fill((Ellipse2D.Double)geo.getShape());
 		  		
 		  		if(geo.getBorder()!=null) 
 		  			g.setColor(geo.getBorder());
@@ -55,7 +55,8 @@ public class Drawer {
 		  	    oldStroke = g.getStroke();
 		  		if(geo.getBorderSize()>0)
 		  			g.setStroke((Stroke) new BasicStroke((int)geo.getBorderSize()));
-		  	    g.draw(new Ellipse2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight()));
+		  	    
+		  		g.draw(geo.getShape());
 		  	    g.setStroke(oldStroke);
 		  		break;
 		  	case LINE:
@@ -72,13 +73,13 @@ public class Drawer {
 		  	    oldStroke = g.getStroke();
 		  		if(geo.getBorderSize()>0)
 		  			g.setStroke((Stroke) new BasicStroke((int)geo.getBorderSize()));
-		  	    g.draw(new Line2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight()));
+		  	    g.draw(geo.getShape());
 		  	    g.setStroke(oldStroke);
 		  		break;
 		  	case TEXT:
 		  		if(geo.getText()!=null) {
 		  			if(geo.getTextColor()!=null) 
-		  				g.setColor(geo.getBorder());
+		  				g.setColor(geo.getTextColor());
 		  			else
 		  				g.setColor(Color.BLACK);
 		  	    	oldFont = g.getFont();
@@ -89,7 +90,7 @@ public class Drawer {
 		  		}	
 		  		break;
 		  	default:
-		  		System.out.println("Unknow type");
+		  		System.out.println("Unknown type");
 		  		break;
 		  		
 		  
