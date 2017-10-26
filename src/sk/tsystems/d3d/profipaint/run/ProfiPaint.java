@@ -34,51 +34,55 @@ public class ProfiPaint extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
-		
+
 		JToolBar toolBar = new JToolBar();
 		paintPanel.add(toolBar, BorderLayout.NORTH);
-		
+
 		JButton btnSelect = new JButton("Select");
 		toolBar.add(btnSelect);
-		
+
 		JButton btnRotateRight = new JButton("Rotate right");
 		toolBar.add(btnRotateRight);
-		
+
 		JButton btnRotateLeft = new JButton("Rotate left");
 		toolBar.add(btnRotateLeft);
-		
+
 		JLabel lblShapes = new JLabel("Shapes: ");
 		toolBar.add(lblShapes);
-		
+
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(GeoType.values()));
 		toolBar.add(comboBox);
-		
+
 		JLabel lblColor = new JLabel("Color: ");
 		toolBar.add(lblColor);
-		
+
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Black", "White", "Red", "Green", "Blue", "Yellow", "Gray"}));
+		comboBox_1.setModel(
+				new DefaultComboBoxModel(new String[] { "Black", "White", "Red", "Green", "Blue", "Yellow", "Gray" }));
 		toolBar.add(comboBox_1);
-		
+
 		JLabel lblBackgroundColor = new JLabel("Background color:  ");
 		toolBar.add(lblBackgroundColor);
-		
+
 		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Black", "White", "Red", "Green", "Blue", "Yellow", "Gray"}));
+		comboBox_2.setModel(
+				new DefaultComboBoxModel(new String[] { "Black", "White", "Red", "Green", "Blue", "Yellow", "Gray" }));
 		toolBar.add(comboBox_2);
-		
-		//ScrollPane sc = new ScrollPane();
-		//sc.add(new DrawPanel(8000, 4500), BorderLayout.CENTER);
-		DrawPanel drp = new DrawPanel(8000, 4500); 
+
+		// ScrollPane sc = new ScrollPane();
+		// sc.add(new DrawPanel(8000, 4500), BorderLayout.CENTER);
+		DrawPanel drp = new DrawPanel(8000, 4500);
 		paintPanel.add(drp, BorderLayout.CENTER);
-		//paintPanel.add(sc, BorderLayout.CENTER);
+		// paintPanel.add(sc, BorderLayout.CENTER);
 		comboBox.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				DrawFace df = drp;
-				df.addGeometric(GeoType.class.cast(e.getItem()));
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					DrawFace df = drp;
+					df.addGeometric(GeoType.class.cast(e.getItem()));
+				}
 			}
 		});
 
