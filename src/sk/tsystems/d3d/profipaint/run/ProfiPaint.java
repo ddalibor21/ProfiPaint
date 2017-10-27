@@ -2,6 +2,7 @@ package sk.tsystems.d3d.profipaint.run;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -19,6 +20,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import ZoeloeSoft.projects.JFontChooser.JFontChooser;
 import sk.tsystems.d3d.profipaint.editor.PaintPanel;
 import sk.tsystems.d3d.profipaint.editor.core.DrawFace;
 import sk.tsystems.d3d.profipaint.editor.core.DrawPanel;
@@ -65,17 +67,11 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		JToolBar toolBar = new JToolBar();
 		paintPanel.add(toolBar, BorderLayout.NORTH);
 
-		JButton btnRotateRight = new JButton("Rotate right");
-		btnRotateRight.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-
 		JLabel lblSize = new JLabel("Size");
 		toolBar.add(lblSize);
 
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"0.5", "1","2", "4", "6" }));
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] { "0.5", "1", "2", "4", "6" }));
 		comboBox_1.addItemListener(new ItemListener() {
 
 			@Override
@@ -87,10 +83,6 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		});
 
 		toolBar.add(comboBox_1);
-		toolBar.add(btnRotateRight);
-
-		JButton btnRotateLeft = new JButton("Rotate left");
-		toolBar.add(btnRotateLeft);
 
 		JLabel lblShapes = new JLabel("Shapes: ");
 		toolBar.add(lblShapes);
@@ -153,6 +145,17 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		tglbtnColorizeonclick = new JToggleButton("ColorizeOnClick");
 		tglbtnColorizeonclick.setEnabled(false);
 		toolBar.add(tglbtnColorizeonclick);
+
+		JButton btnSetfont = new JButton("setFont");
+		toolBar.add(btnSetfont);
+		btnSetfont.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setFont();
+
+			}
+		});
 
 		drawPanel = new DrawPanel(8000, 4500);
 		paintPanel.add(drawPanel, BorderLayout.CENTER);
@@ -258,6 +261,8 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 			if (tglbtnColorizeonclick.isSelected())
 				selected.setFill(shapeColor);
 
+			df.repaint();
+
 		}
 
 	}
@@ -282,7 +287,21 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private void setSize(double size) {
 		if (selected != null)
 			selected.setBorderSize(size);
+
 		df.repaint();
+	}
+
+	private void setFont() {
+		JFontChooser fontChooser = new JFontChooser(null);
+		fontChooser.showDialog();
+
+		if (selected != null && selected.getType() == GeoType.TEXT) {
+
+			Font newFont = fontChooser.getFont();
+			selected.setFont(newFont);
+			df.repaint();
+		}
+
 	}
 
 }
