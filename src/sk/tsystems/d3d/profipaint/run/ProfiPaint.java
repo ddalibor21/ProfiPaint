@@ -37,7 +37,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private static final long serialVersionUID = 6639228443591986333L;
 
 	private DrawFace df;
-	PaintPanel paintPanel;
+	private DrawPanel drawPanel;
 	private static final Color shapeColor = Color.BLACK;
 	private static final Color backgroundColor = Color.WHITE;
 	private Geometric selected;
@@ -54,6 +54,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		setJMenuBar(pm);
 		pm.setOnMenuClick(this);
 
+		PaintPanel paintPanel;
 		paintPanel = new PaintPanel();
 		setContentPane(paintPanel);
 
@@ -148,11 +149,9 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		tglbtnColorizeonclick.setEnabled(false);
 		toolBar.add(tglbtnColorizeonclick);
 
-		// ScrollPane sc = new ScrollPane();
-		// sc.add(new DrawPanel(8000, 4500), BorderLayout.CENTER);
-		DrawPanel drp = new DrawPanel(8000, 4500);
-		paintPanel.add(drp, BorderLayout.CENTER);
-		df = drp;
+		drawPanel = new DrawPanel(8000, 4500);
+		paintPanel.add(drawPanel, BorderLayout.CENTER);
+		df = drawPanel;
 		df.setOnSelect(this);
 
 		// paintPanel.add(sc, BorderLayout.CENTER);
@@ -161,7 +160,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					DrawFace df = drp;
+					DrawFace df = drawPanel;
 					df.addGeometric(GeoType.class.cast(e.getItem()));
 				}
 			}
@@ -209,9 +208,9 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	}
 
 	private GeometricCointainer getCurrentContainer() {
-		GeometricCointainer gc = new GeometricCointainer(paintPanel.getWidth(), paintPanel.getHeight(),
+		GeometricCointainer gc = new GeometricCointainer(drawPanel.getWidth(), drawPanel.getHeight(),
 				df.getGeometrics());
-		gc.setBgColor(paintPanel.getBackground());
+		gc.setBgColor(drawPanel.getBackground());
 		return gc;
 	}
 
