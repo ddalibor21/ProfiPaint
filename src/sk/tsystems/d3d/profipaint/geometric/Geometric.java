@@ -5,8 +5,10 @@ import java.awt.Font;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
-public class Geometric implements Serializable {
+public class Geometric implements Serializable, Cloneable {
 	private static final long serialVersionUID = -7387597717386063055L;
 
 	private GeoType type;
@@ -20,15 +22,13 @@ public class Geometric implements Serializable {
 	private String text;
 	private Font font;
 
-	
-	
 	public Geometric(GeoType type, Double position) {
 		super();
 		this.type = type;
 		this.position = position;
 		this.width = 50;
 		this.height = 50;
-		
+
 	}
 
 	public GeoType getType() {
@@ -111,5 +111,25 @@ public class Geometric implements Serializable {
 		this.textColor = textColor;
 	}
 
-	
+	@Override
+	public Object clone() {
+		Geometric cg = new Geometric(type, position);
+
+		for (Field f : Geometric.class.getDeclaredFields()) {
+			if ((f.getModifiers() & Modifier.FINAL) != 0)
+				continue;
+
+			f.setAccessible(true);
+			try {
+				Object val = f.get(this);
+				f.set(cg, val);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
+		return cg;
+	}
+
 }
