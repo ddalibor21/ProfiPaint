@@ -43,6 +43,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private Geometric selected;
 	private JButton btnShapeColorFill;
 	private JButton bntBackgroundColor;
+	private JButton btnBorderColor;
 
 	protected JToggleButton tglbtnColorizeonclick;
 
@@ -89,7 +90,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		comboBox.setModel(new DefaultComboBoxModel(GeoType.values()));
 		toolBar.add(comboBox);
 
-		JLabel lblColor = new JLabel("Color: ");
+		JLabel lblColor = new JLabel("Shape color: ");
 		toolBar.add(lblColor);
 
 		btnShapeColorFill = new JButton();
@@ -102,11 +103,27 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				paintColor(btnShapeColorFill);
+				paintColor(btnShapeColorFill, true);
 
 			}
 		});
+		
+		JLabel lblBorderColor = new JLabel("Border color:  ");
+		toolBar.add(lblBorderColor);
 
+		btnBorderColor = new JButton();
+		btnBorderColor.setBackground(shapeColor);
+		toolBar.add(btnBorderColor);
+
+		btnBorderColor.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				paintColor(btnBorderColor, false);
+			}
+		});
+		
+		
 		JLabel lblBackgroundColor = new JLabel("Background color:  ");
 		toolBar.add(lblBackgroundColor);
 
@@ -119,10 +136,13 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				paintColor(bntBackgroundColor);
+				paintColor(bntBackgroundColor, false);
 
 			}
 		});
+		
+		
+		
 
 		tglbtnColorizeonclick = new JToggleButton("ColorizeOnClick");
 		tglbtnColorizeonclick.setEnabled(false);
@@ -237,12 +257,17 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 	}
 
-	private void paintColor(JButton btn) {
+	private void paintColor(JButton btn, boolean fore) {
 		Color newColor = JColorChooser.showDialog(null, "Choose a color", shapeColor);
 		if (selected == null) {
 			df.setBackground(newColor);
 		} else if (selected != null) {
+			if(fore)
 			selected.setFill(newColor);
+			else
+			selected.setBorder(newColor);
+			selected.setBorderSize(20);
+		
 		}
 
 		btn.setBackground(newColor);
