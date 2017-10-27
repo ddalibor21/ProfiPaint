@@ -36,9 +36,11 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private static final long serialVersionUID = 6639228443591986333L;
 
 	private DrawFace df;
-	private Color shapeColor = Color.BLACK;
-	private Color backgroundColor = Color.WHITE;
+	private static final Color shapeColor = Color.BLACK;
+	private static final Color backgroundColor = Color.WHITE;
 	private Geometric selected;
+	private JButton btnShapeColorFill;
+	private JButton bntBackgroundColor;
 
 	protected JToggleButton tglbtnColorizeonclick;
 
@@ -88,43 +90,37 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		JLabel lblColor = new JLabel("Color: ");
 		toolBar.add(lblColor);
 
-		JButton btnChooseColor = new JButton();
-		btnChooseColor.setBackground(shapeColor);
+		btnShapeColorFill = new JButton();
+		btnShapeColorFill.setEnabled(false);
+		btnShapeColorFill.setBackground(shapeColor);
 
-		toolBar.add(btnChooseColor);
+		toolBar.add(btnShapeColorFill);
 
-		btnChooseColor.addActionListener(new ActionListener() {
+		btnShapeColorFill.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				paintColor(btnShapeColorFill);
 
-				shapeColor = JColorChooser.showDialog(null, "Choose a color", shapeColor);
-				if (selected != null) {
-					selected.setFill(shapeColor);
-				}
-
-				btnChooseColor.setBackground(shapeColor);
-				df.repaint();
 			}
 		});
-
-		// JComboBox comboBox_1 = new JComboBox();
-		// comboBox_1.setModel(
-		// new DefaultComboBoxModel(new String[] { "Black", "White", "Red", "Green",
-		// "Blue", "Yellow", "Gray" }));
-		// toolBar.add(comboBox_1);
 
 		JLabel lblBackgroundColor = new JLabel("Background color:  ");
 		toolBar.add(lblBackgroundColor);
 
-		JButton bntBackgroundColor = new JButton();
+		bntBackgroundColor = new JButton();
 		bntBackgroundColor.setBackground(backgroundColor);
+
 		toolBar.add(bntBackgroundColor);
-		
-//		JComboBox comboBox_2 = new JComboBox();
-//		comboBox_2.setModel(
-//				new DefaultComboBoxModel(new String[] { "Black", "White", "Red", "Green", "Blue", "Yellow", "Gray" }));
-//		toolBar.add(comboBox_2);
+
+		bntBackgroundColor.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				paintColor(bntBackgroundColor);
+
+			}
+		});
 
 		tglbtnColorizeonclick = new JToggleButton("ColorizeOnClick");
 		tglbtnColorizeonclick.setEnabled(false);
@@ -203,11 +199,28 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		boolean selectionItemsEnable = selected != null;
 		tglbtnColorizeonclick.setEnabled(selectionItemsEnable);
 
+		btnShapeColorFill.setEnabled(selectionItemsEnable);
+		bntBackgroundColor.setEnabled(!selectionItemsEnable);
+		
 		if (selectionItemsEnable) {
+
 			if (tglbtnColorizeonclick.isSelected())
 				selected.setFill(shapeColor);
 
 		}
+
+	}
+
+	private void paintColor(JButton btn) {
+		Color newColor = JColorChooser.showDialog(null, "Choose a color", shapeColor);
+		if (selected == null) {
+			df.setBackground(newColor);
+		} else if (selected != null) {
+			selected.setFill(newColor);
+		}
+
+		btn.setBackground(newColor);
+		df.repaint();
 	}
 
 }
