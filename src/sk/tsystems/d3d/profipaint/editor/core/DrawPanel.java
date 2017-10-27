@@ -55,6 +55,14 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPo
 	private void draw(Graphics2D g) {
 		Drawer.draw(geometrics, g, this, getBackground());
 
+		for(Geometric ge: geometrics) {
+			Rectangle2D rectSel = new Rectangle2D.Double(ge.getPosition().getX(), ge.getPosition().getY(),
+					ge.getWidth(), ge.getHeight());
+
+			g.setColor(Color.PINK);
+			g.draw(rectSel);
+		}
+		
 		if (selected != null) {
 			Rectangle2D rectSel = new Rectangle2D.Double(selected.getPosition().getX(), selected.getPosition().getY(),
 					selected.getWidth(), selected.getHeight());
@@ -102,6 +110,9 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPo
 
 		newGeo = new Geometric(type, new Point2D.Double(10, 10));
 		geometrics.add(newGeo);
+		if(GeoType.TEXT.equals(type))
+			newGeo.setText("Yupii");
+		
 		repaint();
 	}
 
