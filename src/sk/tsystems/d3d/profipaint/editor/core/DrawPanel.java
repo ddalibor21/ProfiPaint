@@ -35,6 +35,7 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPo
 
 	public DrawPanel(int width, int height) {
 		super();
+		setBackground(Color.WHITE);
 		geometrics = new ArrayList<>();
 		mode = DrawMode.NONE;
 		setMinimumSize(new Dimension(width, height));
@@ -139,7 +140,6 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPo
 		selectionChange(selected);
 
 		if (selected != null && e.getButton() == MouseEvent.BUTTON3) {
-			System.out.println(e.getSource());
 			popup.show((JPanel) e.getSource(), e.getX(), e.getY());
 		}
 	}
@@ -206,24 +206,38 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPo
 	public void onItemClick(DrawPopupAction item) {
 		switch (item) {
 		case BRING_BACK:
+			bring(-1);
 			break;
 		case BRING_FRONT:
+			bring(1);
 			break;
 		case ERASE:
 			geometrics.remove(selected);
 			selectionChange(null);
 			break;
 		case SEND_BACK:
+			bring(geometrics.indexOf(selected), 0);
 			break;
 		case SEND_FRONT:
+			bring(geometrics.indexOf(selected), geometrics.size() - 1);
 			break;
 		default:
 			throw new UnsupportedOperationException(item.name());
 		}
 	}
-	
-	private void bring() {
-		
+
+	private void bring(int idx) {
+		int index = geometrics.indexOf(selected);
+		bring(index, index + idx);
+	}
+
+	private void bring(int oldindex, int newindex) {
+		if (newindex < 0 || newindex >= geometrics.size())
+			return;
+
+		geometrics.remove(oldindex);
+		geometrics.add(newindex, selected);
+		repaint();
 	}
 
 }
