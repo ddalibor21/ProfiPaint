@@ -11,11 +11,16 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import sk.tsystems.d3d.profipaint.drawer.Drawer;
+import sk.tsystems.d3d.profipaint.editor.core.popup.DrawPopup;
+import sk.tsystems.d3d.profipaint.editor.core.popup.DrawPopupAction;
+import sk.tsystems.d3d.profipaint.editor.core.popup.DrawPopupClick;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
 import sk.tsystems.d3d.profipaint.geometric.Geometric;
 
-public class DrawPanel extends MouseInteractionPanel implements DrawFace {
+public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPopupClick {
 	private static final long serialVersionUID = 7161667598637528610L;
 
 	private List<Geometric> geometrics;
@@ -26,12 +31,14 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 	private Shape sizer;
 	private OnGeometricSelect onSelect;
 	private DrawMode mode;
+	private DrawPopup popup;
 
 	public DrawPanel(int width, int height) {
 		super();
 		geometrics = new ArrayList<>();
 		mode = DrawMode.NONE;
 		setMinimumSize(new Dimension(width, height));
+		popup = new DrawPopup(this);
 	}
 
 	@Override
@@ -45,19 +52,28 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 	}
 
 	private void draw(Graphics2D g) {
-		Drawer.draw(geometrics, g, this, Color.white);
+		Drawer.draw(geometrics, g, this, getBackground());
 
 		if (selected != null) {
 			Rectangle2D rectSel = new Rectangle2D.Double(selected.getPosition().getX(), selected.getPosition().getY(),
 					selected.getWidth(), selected.getHeight());
 
-			g.setColor(Color.red);
+			g.setColor(getInvertColor(selected.getBorder()));
 			g.draw(rectSel);
 
 			sizer = new Rectangle2D.Double(selected.getPosition().getX() + selected.getWidth() - 3,
 					selected.getPosition().getY() + selected.getHeight() - 3, 6, 6);
 			g.fill(sizer);
 		}
+	}
+
+	private Color getInvertColor(Color c) {
+		if (c == null)
+			c = Color.BLACK;
+		float[] hsv = new float[3];
+		Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsv);
+		hsv[0] = (hsv[0] + 180) % 360;
+		return Color.getHSBColor(hsv[0], hsv[1], hsv[2]);
 	}
 
 	private void cancelNewGeo() {
@@ -117,11 +133,15 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 			if (ge.getPosition().x <= e.getX() && ge.getPosition().x + ge.getWidth() >= e.getX()
 					&& ge.getPosition().y <= e.getY() && ge.getPosition().y + ge.getHeight() >= e.getY()) {
 				selected = ge;
-				// break;
 			}
 		}
 
 		selectionChange(selected);
+
+		if (selected != null && e.getButton() == MouseEvent.BUTTON3) {
+			System.out.println(e.getSource());
+			popup.show((JPanel) e.getSource(), e.getX(), e.getY());
+		}
 	}
 
 	@Override
@@ -180,6 +200,30 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 	@Override
 	public Geometric getSelected() {
 		return selected;
+	}
+
+	@Override
+	public void onItemClick(DrawPopupAction item) {
+		switch (item) {
+		case BRING_BACK:
+			break;
+		case BRING_FRONT:
+			break;
+		case ERASE:
+			geometrics.remove(selected);
+			selectionChange(null);
+			break;
+		case SEND_BACK:
+			break;
+		case SEND_FRONT:
+			break;
+		default:
+			throw new UnsupportedOperationException(item.name());
+		}
+	}
+	
+	private void bring() {
+		
 	}
 
 }

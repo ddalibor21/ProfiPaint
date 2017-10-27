@@ -1,5 +1,6 @@
 package sk.tsystems.d3d.profipaint.editor.core;
 
+import java.awt.Color;
 import java.util.List;
 
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
@@ -12,5 +13,6 @@ public interface DrawFace {
 	void setOnSelect(OnGeometricSelect onSelect);
 	void repaint();
 	Geometric getSelected();	
+	void setBackground(Color color);
 
 }
