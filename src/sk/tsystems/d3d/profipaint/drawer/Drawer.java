@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
@@ -21,6 +22,9 @@ public class Drawer {
 			g.setColor(background);
 			g.fillRect(0, 0, w, h);
 		}
+
+		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHints(rh);
 
 		Stroke oldStroke = g.getStroke();
 		Font oldFont = g.getFont();

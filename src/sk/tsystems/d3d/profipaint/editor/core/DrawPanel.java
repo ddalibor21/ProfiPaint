@@ -77,12 +77,10 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace, DrawPo
 	}
 
 	private Color getInvertColor(Color c) {
-		if (c == null)
-			c = Color.BLACK;
-		float[] hsv = new float[3];
-		Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsv);
-		hsv[0] = (hsv[0] + 180) % 360;
-		return Color.getHSBColor(hsv[0], hsv[1], hsv[2]);
+		if(c == null)
+			return Color.RED;
+		
+		return new Color(c.getBlue(), c.getGreen(), c.getRed());
 	}
 
 	private void cancelNewGeo() {
