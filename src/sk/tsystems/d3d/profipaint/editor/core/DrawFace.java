@@ -7,7 +7,6 @@ import sk.tsystems.d3d.profipaint.geometric.Geometric;
 
 public interface DrawFace {
 	List<Geometric> getGeometrics();
-	List<Geometric> getSelection();
 	void addGeometric(GeoType type);
 
 	void setOnSelect(OnGeometricSelect onSelect);

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -20,18 +19,18 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 	private static final long serialVersionUID = 7161667598637528610L;
 
 	private List<Geometric> geometrics;
-	private List<Geometric> selection;
 	private Geometric newGeo;
 	private Geometric selected;
 	private double pdX;
 	private double pdY;
 	private Shape sizer;
 	private OnGeometricSelect onSelect;
+	private DrawMode mode;
 
 	public DrawPanel(int width, int height) {
 		super();
 		geometrics = new ArrayList<>();
-		selection = new ArrayList<>();
+		mode = DrawMode.NONE;
 		setMinimumSize(new Dimension(width, height));
 	}
 
@@ -41,20 +40,17 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 	}
 
 	@Override
-	public List<Geometric> getSelection() {
-		return selection;
-	}
-
-	@Override
 	public void paint(Graphics g) {
 		draw(Graphics2D.class.cast(g));
 	}
 
 	private void draw(Graphics2D g) {
 		Drawer.draw(geometrics, g, this, Color.white);
+
 		if (selected != null) {
 			Rectangle2D rectSel = new Rectangle2D.Double(selected.getPosition().getX(), selected.getPosition().getY(),
 					selected.getWidth(), selected.getHeight());
+
 			g.setColor(Color.red);
 			g.draw(rectSel);
 
@@ -83,8 +79,8 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 	public void addGeometric(GeoType type) {
 		selectionChange(null);
 		cancelNewGeo();
-		
-		if (type == null) 
+
+		if (type == null)
 			return;
 
 		newGeo = new Geometric(type, new Point2D.Double(10, 10));
@@ -121,7 +117,7 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 			if (ge.getPosition().x <= e.getX() && ge.getPosition().x + ge.getWidth() >= e.getX()
 					&& ge.getPosition().y <= e.getY() && ge.getPosition().y + ge.getHeight() >= e.getY()) {
 				selected = ge;
-				//break;
+				// break;
 			}
 		}
 
@@ -130,18 +126,14 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (selected != null && sizer.contains(e.getPoint())) {
+		if (DrawMode.RESIZE.equals(mode)) {
 			selected.setWidth(e.getX() - selected.getPosition().getX());
 			selected.setHeight(e.getY() - selected.getPosition().getY());
 			repaint();
 			return;
 		}
 
-		if (selected != null) {
-			if (pdX < 0) {
-				pdX = e.getX() - selected.getPosition().getX();
-				pdY = e.getY() - selected.getPosition().getY();
-			}
+		if (DrawMode.MOVE.equals(mode)) {
 			selected.setPosition(new Point2D.Double(e.getX() - pdX, e.getY() - pdY));
 			repaint();
 		}
@@ -149,12 +141,23 @@ public class DrawPanel extends MouseInteractionPanel implements DrawFace {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		pdX = -1;
-		pdY = -1;
+		if (e.getButton() != MouseEvent.BUTTON1)
+			return;
+
+		if (selected != null) {
+			if (sizer.contains(e.getPoint()))
+				mode = DrawMode.RESIZE;
+			else {
+				mode = DrawMode.MOVE;
+				pdX = e.getX() - selected.getPosition().getX();
+				pdY = e.getY() - selected.getPosition().getY();
+			}
+		}
 	}
 
-	private Point2D.Double p2p(Point p) {
-		return new Point2D.Double(p.getX(), p.getY());
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		mode = DrawMode.NONE;
 	}
 
 	private void selectionChange(Geometric selected) {
