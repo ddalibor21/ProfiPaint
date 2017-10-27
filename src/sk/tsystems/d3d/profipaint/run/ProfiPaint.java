@@ -189,7 +189,10 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	}
 
 	private GeometricCointainer getCurrentContainer() {
-		return new GeometricCointainer(paintPanel.getWidth(), paintPanel.getHeight(), df.getGeometrics());
+		GeometricCointainer gc = new GeometricCointainer(paintPanel.getWidth(), paintPanel.getHeight(),
+				df.getGeometrics());
+		gc.setBgColor(paintPanel.getBackground());
+		return gc;
 	}
 
 	private void saveOpen(MenuItem i) {
@@ -210,6 +213,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 			GeometricCointainer con = Vector2File.loadFile(file.getAbsolutePath());
 			df.getGeometrics().clear();
 			df.getGeometrics().addAll(con.getListoFGeometrics());
+			df.setBackground(con.getBgColor());
 			df.repaint();
 		}
 
