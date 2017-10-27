@@ -11,16 +11,17 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-import javax.swing.JPanel;
-
 import sk.tsystems.d3d.profipaint.geometric.Geometric;
 
 public class Drawer {
 
 	// tot by malo kreslit na grapgics2d
-	public static void draw(List<Geometric> geometrics, Graphics2D g, JPanel panel, Color background) {
-		g.setColor(background);
-		g.fillRect(0, 0, panel.getWidth(), panel.getHeight());
+	public static void draw(List<Geometric> geometrics, Graphics2D g, int w, int h, Color background) {
+		if (background != null) {
+			g.setColor(background);
+			g.fillRect(0, 0, w, h);
+		}
+
 		Stroke oldStroke = g.getStroke();
 		Font oldFont = g.getFont();
 		Shape shape;
@@ -93,12 +94,13 @@ public class Drawer {
 					oldFont = g.getFont();
 					if (geo.getFont() != null)
 						g.setFont(geo.getFont());
-					
+
 					Rectangle2D dims = g.getFontMetrics().getStringBounds(geo.getText(), g);
 					geo.setWidth(dims.getWidth());
 					geo.setHeight(dims.getHeight());
-					
-					g.drawString(geo.getText(), (int) geo.getPosition().getX(), (int) (geo.getPosition().getY()+dims.getHeight()));
+
+					g.drawString(geo.getText(), (int) geo.getPosition().getX(),
+							(int) (geo.getPosition().getY() + dims.getHeight()));
 
 					g.setFont(oldFont);
 
