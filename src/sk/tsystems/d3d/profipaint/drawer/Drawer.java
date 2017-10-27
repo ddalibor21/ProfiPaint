@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -22,14 +23,17 @@ public class Drawer {
 		g.fillRect(0, 0, panel.getWidth(), panel.getHeight());
 		Stroke oldStroke = g.getStroke();
 	    Font oldFont=g.getFont();
-		for(Geometric geo: geometrics) {
+	    Shape shape;
+	    
+	    for(Geometric geo: geometrics) {
 		  switch(geo.getType()) {
 		  	case RECTANGLE:
+		  		shape =new Rectangle2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight());
 		  		if(geo.getFill()!=null) 
 		  			g.setColor(geo.getFill());
 		  		else	
 		  		    g.setColor(Color.WHITE);	
-		  	    g.fill(geo.getShape());
+		  	    g.fill(shape);
 		  		
 		  		if(geo.getBorder()!=null) 
 		  			g.setColor(geo.getBorder());
@@ -38,15 +42,16 @@ public class Drawer {
 		  	    oldStroke = g.getStroke();
 		  		if(geo.getBorderSize()>0)
 		  			g.setStroke((Stroke) new BasicStroke((int)geo.getBorderSize()));
-		  	    g.draw(geo.getShape());
+		  	    g.draw(shape);
 		  	    g.setStroke(oldStroke);
 		  		break;
 		  	case OVAL:
+		  		shape = new Ellipse2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getWidth(), geo.getHeight());
 		  		if(geo.getFill()!=null) 
 		  			g.setColor(geo.getFill());
 		  		else	
 		  		    g.setColor(Color.WHITE);	
-		  	    g.fill((Ellipse2D.Double)geo.getShape());
+		  	    g.fill(shape);
 		  		
 		  		if(geo.getBorder()!=null) 
 		  			g.setColor(geo.getBorder());
@@ -56,10 +61,11 @@ public class Drawer {
 		  		if(geo.getBorderSize()>0)
 		  			g.setStroke((Stroke) new BasicStroke((int)geo.getBorderSize()));
 		  	    
-		  		g.draw(geo.getShape());
+		  		g.draw(shape);
 		  	    g.setStroke(oldStroke);
 		  		break;
 		  	case LINE:
+		  		shape =new Line2D.Double(geo.getPosition().getX(), geo.getPosition().getY(),geo.getPosition().getX()+geo.getWidth(),geo.getPosition().getY()+ geo.getHeight());
 		  		/*if(geo.getFill()!=null) 
 		  			g.setColor(geo.getFill());
 		  		else	
@@ -73,7 +79,7 @@ public class Drawer {
 		  	    oldStroke = g.getStroke();
 		  		if(geo.getBorderSize()>0)
 		  			g.setStroke((Stroke) new BasicStroke((int)geo.getBorderSize()));
-		  	    g.draw(geo.getShape());
+		  	    g.draw(shape);
 		  	    g.setStroke(oldStroke);
 		  		break;
 		  	case TEXT:

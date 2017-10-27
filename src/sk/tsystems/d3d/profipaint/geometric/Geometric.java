@@ -24,7 +24,7 @@ public class Geometric implements Serializable {
 	private String text;
 	private Font font;
 
-	private transient Shape shape;
+	
 	
 	public Geometric(GeoType type, Double position) {
 		super();
@@ -32,23 +32,7 @@ public class Geometric implements Serializable {
 		this.position = position;
 		this.width = 50;
 		this.height = 50;
-		switch(this.type) {
-	    	case OVAL:
-	  	    	shape = new Ellipse2D.Double(this.getPosition().getX(), this.getPosition().getY(),this.getWidth(), this.getHeight());
-	  		    break;
-		    case RECTANGLE:
-		  		shape =new Rectangle2D.Double(this.getPosition().getX(), this.getPosition().getY(),this.getWidth(), this.getHeight());
-		  		break;
-		  	case LINE:
-		  		shape =new Line2D.Double(this.getPosition().getX(), this.getPosition().getY(),this.getPosition().getX()+this.getWidth(),this.getPosition().getY()+ this.getHeight());
-		  		break;
-		  	case TEXT:
-		  		shape = null;
-		  		break;
-		  	default:
-		  		shape = null;
-		  		break;	
-		}
+		
 	}
 
 	public GeoType getType() {
@@ -131,8 +115,5 @@ public class Geometric implements Serializable {
 		this.textColor = textColor;
 	}
 
-	public Shape getShape() {
-		return shape;
-	}
-
+	
 }
