@@ -33,6 +33,7 @@ import sk.tsystems.d3d.profipaint.filesupport.Vector2File;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
 import sk.tsystems.d3d.profipaint.geometric.Geometric;
 import sk.tsystems.d3d.profipaint.geometric.GeometricCointainer;
+import javax.swing.JTextField;
 
 public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private static final long serialVersionUID = 6639228443591986333L;
@@ -47,6 +48,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private JButton btnBorderColor;
 
 	protected JToggleButton tglbtnColorizeonclick;
+	private JTextField textField;
 
 	public ProfiPaint() {
 		super("Profi Paint");
@@ -148,6 +150,20 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 		JButton btnSetfont = new JButton("setFont");
 		toolBar.add(btnSetfont);
+
+		textField = new JTextField();
+		textField.setVisible(false);
+		toolBar.add(textField);
+		textField.setColumns(10);
+		textField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selected.setText(textField.getText());
+				df.repaint();
+			}
+		});
+
 		btnSetfont.addActionListener(new ActionListener() {
 
 			@Override
@@ -251,6 +267,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		this.selected = selected;
 		boolean selectionItemsEnable = selected != null;
 		tglbtnColorizeonclick.setEnabled(selectionItemsEnable);
+		textField.setVisible(false);
 
 		btnShapeColorFill.setEnabled(selectionItemsEnable);
 		bntBackgroundColor.setEnabled(!selectionItemsEnable);
@@ -262,7 +279,8 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 				selected.setFill(shapeColor);
 
 			df.repaint();
-
+			textField.setVisible(GeoType.TEXT.equals(selected.getType()));
+			textField.setText(selected.getText());
 		}
 
 	}
