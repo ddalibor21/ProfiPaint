@@ -2,6 +2,8 @@ package sk.tsystems.d3d.profipaint.run;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -13,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -28,10 +31,6 @@ import sk.tsystems.d3d.profipaint.filesupport.Vector2File;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
 import sk.tsystems.d3d.profipaint.geometric.Geometric;
 import sk.tsystems.d3d.profipaint.geometric.GeometricCointainer;
-import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JToggleButton;
 
 public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private static final long serialVersionUID = 6639228443591986333L;
@@ -66,19 +65,28 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		JToolBar toolBar = new JToolBar();
 		paintPanel.add(toolBar, BorderLayout.NORTH);
 
-		JButton btnSelect = new JButton();
-		btnSelect.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnSelect.setIcon(new ImageIcon(ProfiPaint.class.getResource("/Icons/SelectIcon.png")));
-		toolBar.add(btnSelect);
-
 		JButton btnRotateRight = new JButton("Rotate right");
 		btnRotateRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
+
+		JLabel lblSize = new JLabel("Size");
+		toolBar.add(lblSize);
+
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"0.5", "1","2", "4", "6" }));
+		comboBox_1.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				double size = Double.parseDouble((String) e.getItem());
+				setSize(size);
+
+			}
+		});
+
+		toolBar.add(comboBox_1);
 		toolBar.add(btnRotateRight);
 
 		JButton btnRotateLeft = new JButton("Rotate left");
@@ -108,23 +116,23 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 			}
 		});
-		
+
 		JLabel lblBorderColor = new JLabel("Border color:  ");
 		toolBar.add(lblBorderColor);
 
 		btnBorderColor = new JButton();
+		btnBorderColor.setEnabled(false);
 		btnBorderColor.setBackground(shapeColor);
 		toolBar.add(btnBorderColor);
 
 		btnBorderColor.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				paintColor(btnBorderColor, false);
 			}
 		});
-		
-		
+
 		JLabel lblBackgroundColor = new JLabel("Background color:  ");
 		toolBar.add(lblBackgroundColor);
 
@@ -141,9 +149,6 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 			}
 		});
-		
-		
-		
 
 		tglbtnColorizeonclick = new JToggleButton("ColorizeOnClick");
 		tglbtnColorizeonclick.setEnabled(false);
@@ -246,6 +251,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 		btnShapeColorFill.setEnabled(selectionItemsEnable);
 		bntBackgroundColor.setEnabled(!selectionItemsEnable);
+		btnBorderColor.setEnabled(selectionItemsEnable);
 
 		if (selectionItemsEnable) {
 
@@ -261,15 +267,21 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		if (selected == null) {
 			df.setBackground(newColor);
 		} else if (selected != null) {
-			if(fore)
-			selected.setFill(newColor);
-			else
-			selected.setBorder(newColor);
-			selected.setBorderSize(20);
-		
+			if (fore)
+				selected.setFill(newColor);
+			else {
+				selected.setBorder(newColor);
+			}
+
 		}
 
 		btn.setBackground(newColor);
+		df.repaint();
+	}
+
+	private void setSize(double size) {
+		if (selected != null)
+			selected.setBorderSize(size);
 		df.repaint();
 	}
 
