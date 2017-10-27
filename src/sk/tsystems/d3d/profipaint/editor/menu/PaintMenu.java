@@ -19,15 +19,21 @@ public class PaintMenu extends JMenuBar implements ActionListener {
 
 		JMenuItem mntmNew = new JMenuItem("New");
 		mnFile.add(mntmNew);
+		
+		mnFile.addSeparator();
 
 		JMenuItem mntmOpen = new JMenuItem("Open");
 		mnFile.add(mntmOpen);
 
 		JMenuItem mntmSave = new JMenuItem("Save");
 		mnFile.add(mntmSave);
+		mnFile.addSeparator();
+		JMenuItem mntmExport = new JMenuItem("Export PNG");
+		mnFile.add(mntmExport);
 
 		menuItemPref(mntmOpen, MenuItem.OPEN);
 		menuItemPref(mntmSave, MenuItem.SAVE);
+		menuItemPref(mntmExport, MenuItem.EXPORT);
 	}
 
 	private void menuItemPref(JMenuItem item, MenuItem type) {

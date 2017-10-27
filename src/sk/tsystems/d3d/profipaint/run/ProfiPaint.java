@@ -23,6 +23,7 @@ import sk.tsystems.d3d.profipaint.editor.core.OnGeometricSelect;
 import sk.tsystems.d3d.profipaint.editor.menu.MenuClick;
 import sk.tsystems.d3d.profipaint.editor.menu.MenuItem;
 import sk.tsystems.d3d.profipaint.editor.menu.PaintMenu;
+import sk.tsystems.d3d.profipaint.filesupport.ExportPNG;
 import sk.tsystems.d3d.profipaint.filesupport.Vector2File;
 import sk.tsystems.d3d.profipaint.geometric.GeoType;
 import sk.tsystems.d3d.profipaint.geometric.Geometric;
@@ -36,6 +37,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 	private static final long serialVersionUID = 6639228443591986333L;
 
 	private DrawFace df;
+	PaintPanel paintPanel;
 	private static final Color shapeColor = Color.BLACK;
 	private static final Color backgroundColor = Color.WHITE;
 	private Geometric selected;
@@ -51,7 +53,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 		setJMenuBar(pm);
 		pm.setOnMenuClick(this);
 
-		PaintPanel paintPanel = new PaintPanel();
+		paintPanel = new PaintPanel();
 		setContentPane(paintPanel);
 
 		setSize(900, 600);
@@ -165,9 +167,29 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 			saveOpen(clicked);
 			break;
 
+		case EXPORT:
+			exportPNG();
+			break;
+
 		default:
 			throw new RuntimeException("Unimplemnted menu click " + clicked);
 		}
+	}
+
+	private void exportPNG() {
+		JFileChooser fileChooser = new JFileChooser();
+		FileNameExtensionFilter fifi = new FileNameExtensionFilter("*.png", "png");
+		fileChooser.addChoosableFileFilter(fifi);
+		fileChooser.setFileFilter(fifi);
+
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			ExportPNG.exportPNG(fileChooser.getSelectedFile(), getCurrentContainer());
+		}
+
+	}
+
+	private GeometricCointainer getCurrentContainer() {
+		return new GeometricCointainer(paintPanel.getWidth(), paintPanel.getHeight(), df.getGeometrics());
 	}
 
 	private void saveOpen(MenuItem i) {
@@ -178,7 +200,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 		if (MenuItem.SAVE.equals(i) && fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();
-			GeometricCointainer geoCon = new GeometricCointainer(200, 200, df.getGeometrics());
+			GeometricCointainer geoCon = getCurrentContainer();
 			Vector2File.saveFile(geoCon, file.getAbsolutePath());
 		}
 
@@ -201,7 +223,7 @@ public class ProfiPaint extends JFrame implements MenuClick, OnGeometricSelect {
 
 		btnShapeColorFill.setEnabled(selectionItemsEnable);
 		bntBackgroundColor.setEnabled(!selectionItemsEnable);
-		
+
 		if (selectionItemsEnable) {
 
 			if (tglbtnColorizeonclick.isSelected())
